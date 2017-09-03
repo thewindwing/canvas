@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas {
+            border: 1px solid #ccc;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<canvas width="600" height="400"></canvas>
+<script>
+    /*准备一组数据*/
+    var data = [
+        {
+            title: '15-20岁',
+            num: 13
+        },
+        {
+            title: '20-25岁',
+            num: 20
+        },
+        {
+            title: '25-30岁',
+            num: 9
+        },
+        {
+            title: '30-35岁',
+            num: 6
+        },
+        {
+            title: '35-40岁',
+            num: 15
+        }
+    ];
+    (function (window) {
+        var self;
+
+        function PieChart(data) {
+            self = this;
+            this.ctx = document.querySelector('canvas').getContext('2d');
+            //坐标原点
+            this.x0 = this.ctx.canvas.width / 2 + 50;
+            this.y0 = this.ctx.canvas.height / 2;
+            //半径
+            this.radius = 150;
+            this.data = data;
+            this.canvasData = [];
+            //线延伸的长度
+            this.lineOut = 20;
+            //说明上间隙
+            this.space = 10;
+            //画图
+            this.drawPie();
+        }
+
+        (function () {
+            //数据转为弧度
+            this.transform = function () {
+                var total = 0;
+                this.data.forEach(function (item, i) {
+                    return total += item.num;
+                });
+                this.data.forEach(function (item, i) {
+                    var angle = 2 * Math.PI * (item.num / total);
+                    self.canvasData.push(angle);
+                });
+            };
+            //画饼形图
+            this.drawPie = function () {
+                //先转换弧度
+                this.transform();
+                var startAngle = 0;
+                var color = "";
+                this.canvasData.forEach(function (item, index) {
+                    self.ctx.beginPath();
+                    self.ctx.moveTo(self.x0, self.y0);
+                    self.ctx.arc(self.x0, self.y0, self.radius, startAngle, startAngle + item);
+                    color = self.ctx.fillStyle = self.getRandomColor();
+                    self.ctx.fill();
+                    self.drawText(startAngle, item, color, self.data[index]);
+                    self.drawDesc(color, self.data[index], index);
+                    startAngle = startAngle + item;
+                })
+            };
+            //随机取色
+            this.getRandomColor = function () {
+                var r = Math.floor(Math.random() * 256);
+                var g = Math.floor(Math.random() * 256);
+                var b = Math.floor(Math.random() * 256);
+                return 'rgb(' + r + ',' + g + ',' + b + ')';
+            };
+
+            //绘制文本
+            this.drawText = function (startAngle, angle, color, data) {
+                var edge = self.radius + self.lineOut;
+                var edgeX = Math.cos(startAngle + angle / 2) * edge;
+                var edgeY = Math.sin(startAngle + angle / 2) * edge;
+                //划线
+                self.ctx.beginPath();
+                self.ctx.moveTo(self.x0, self.y0);
+                self.ctx.lineTo(self.x0 + edgeX, self.y0 + edgeY);
+                var textWidth = self.ctx.measureText(data.title).width;
+                self.ctx.strokeStyle = color;
+                self.ctx.textBaseline = 'bottom';
+                if (edgeX < 0) {
+                    self.ctx.lineTo(self.x0 + edgeX - textWidth, self.y0 + edgeY);
+                    self.ctx.textAlign = 'right';
+                } else {
+                    self.ctx.lineTo(self.x0 + edgeX + textWidth, self.y0 + edgeY);
+                    self.ctx.textAlign = 'left';
+                }
+                self.ctx.fillText(data.title, self.x0 + edgeX, self.y0 + edgeY);
+                self.ctx.stroke();
+
+            };
+            //绘制说明
+            this.drawDesc = function (color, data, index) {
+                this.ctx.fillRect(20, 30 + (this.space + 20) * index, 50, 20);
+                this.ctx.textBaseline = 'top';
+                this.ctx.textAlign = 'left';
+                this.ctx.fillText(data.title, 80, 30 + (this.space + 20) * index);
+
+            };
+        }).call(PieChart.prototype);
+
+        window.PieChart = PieChart;
+    })(window);
+
+    new PieChart(data);
+</script>
+</body>
+</html>

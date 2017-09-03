@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas{
+            border:1px solid #ccc;
+            margin:0 auto;
+            display:block;
+        }
+    </style>
+</head>
+<body>
+<canvas width="600" height="400"></canvas>
+<script>
+var ctx=document.querySelector('canvas').getContext('2d');
+   var y=0;
+    for(var i=0;i<ctx.canvas.width;i++){
+        ctx.beginPath();
+        ctx.moveTo(i,y);
+//        ctx.lineTo(i+1,Math.pow(i+2,2));
+        yy=(Math.sin(i/20)*100)+300;
+      ctx.lineTo(i+1,yy);
+      y=yy;
+//        y=Math.pow(i+2,2);
+//        y=Math.sin(i);
+        ctx.stroke();
+
+    }
+</script>
+</body>
+</html>

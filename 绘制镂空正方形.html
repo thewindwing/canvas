@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        canvas{
+            border:1px solid #ccc;
+            display:block;
+            margin:0 auto;
+        }
+    </style>
+</head>
+<body>
+<canvas width="600" height="400"></canvas>
+<script>
+    var canvas=document.querySelector('canvas');
+    var ctx=canvas.getContext('2d');
+    //设置正方形的宽高
+    var square=200;
+    var square1=100;
+    //获取画布的宽高
+    var width=ctx.canvas.width;
+    var height=ctx.canvas.height;
+    ctx.lineStyle='red';
+//    console.log(width,height);
+    ctx.moveTo(width/2-square/2,height/2-square/2);
+    ctx.lineTo(width/2+square/2,height/2-square/2);
+    ctx.lineTo(width/2+square/2,height/2+square/2);
+    ctx.lineTo(width/2-square/2,height/2+square/2);
+    ctx.closePath();
+    ctx.fillStyle='#4d2';
+
+
+//    ctx.beginPath();
+    ctx.moveTo(width/2-square1/2,height/2-square1/2);
+    ctx.lineTo(width/2-square1/2,height/2+square1/2);
+    ctx.lineTo(width/2+square1/2,height/2+square1/2);
+    ctx.lineTo(width/2+square1/2,height/2-square1/2);
+//    ctx.fillStyle='red';
+    ctx.closePath();
+
+    ctx.stroke();
+    ctx.fill();
+
+</script>
+</body>
+</html>

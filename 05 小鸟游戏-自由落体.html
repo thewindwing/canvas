@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<!--
+
+1. 匀速运动：   路程 = 速度 * 时间    s = v * t
+
+2. 匀加速运动：
+路程 = 初速度 * 时间 + 加速度 * 时间 * 时间 / 2
+s = v0 * t + acc * t * t / 2
+最后的速度：v0 + acc * t;
+平均速度：(v0 + v0 + acc * t)/2
+推导：(v0 + v0 + acc * t)/2 * t
+    = v0 * t + acc * t * t / 2
+
+3. 自由落体：初速度为0的匀加速运动  加速度  9.8
+h = 9.8*t*t/2
+
+4. 1米 大概有 2800 像素
+-->
+<body>
+<canvas width="800" height="600"></canvas>
+<script>
+    var canvas = document.querySelector('canvas');
+    var ctx = canvas.getContext('2d');
+    /*画布的尺寸*/
+    var width = ctx.canvas.width;
+    var height = ctx.canvas.height;
+    /*s = v0 * t + acc * t * t / 2 */
+    /*1. 默认的初速度  0*/
+    var v0 = 0;
+    /*2.计算运行时间  t = deltaTime*/
+    var startTime = Date.now();
+    /*3.假设 加速度 0.0005 */
+    var acc = 0.0005;
+    /*4. 默认初始高度*/
+    var h = 50;
+
+
+    var animation = function () {
+        ctx.save();
+        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+
+        /*计算运行时间*/
+        var currTime = Date.now();
+        var deltaTime = currTime - startTime;
+        startTime = currTime;
+        /*计算高度*/
+        h += v0 * deltaTime + acc * deltaTime * deltaTime / 2;
+        //下次的初速度
+        v0 += acc * deltaTime;
+
+        //console.log(deltaTime);
+        //console.log(h);
+        if(h > 550){
+            v0 = -0.8 * v0;
+            h = 550;
+        }
+
+        ctx.translate(400,h);
+        ctx.beginPath();
+        ctx.arc(0,0,50,0,Math.PI*2);
+        var rg = ctx.createRadialGradient(0,0,50,-10,-10,0);
+        rg.addColorStop(0,'blue');
+        rg.addColorStop(1,'rgba(255,255,255,0.3)');
+        ctx.fillStyle = rg;
+        ctx.fill();
+
+        requestAnimationFrame(animation);
+
+        ctx.restore();
+    }
+
+    animation();
+
+
+
+
+</script>
+</body>
+</html>

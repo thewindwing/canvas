@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas width="600" height="400" id="myCanvas"></canvas>
+<script>
+    var ctx = document.querySelector('canvas').getContext('2d');
+    var width = ctx.canvas.width;
+    var height = ctx.canvas.height;
+    var img = new Image();
+    img.onload = function () {
+        var index = 0;
+        var perWidth = img.width / 4;
+        var perHeight = img.height / 4;
+        var step = 0;
+        var stepSize = 20;
+        var startX = width / 2 - perWidth / 2;
+        var startY = height / 2 - perHeight / 2;
+        var direction = 'left';
+//        console.log(perWidth)
+        ctx.drawImage(img, 0, perHeight, perWidth, perHeight, startX, startY, perWidth, perHeight);
+        setInterval(function () {
+            index++;
+            if (direction == 'right') {
+                step++;
+                if (startX + step * stepSize > (width - perWidth)) {
+                    direction = 'left';
+                }
+            } else {
+                step--;
+                if (startX + step * stepSize < 0) {
+                    direction = 'right';
+                }
+            }
+            if (index > 3) {
+                index = 0;
+            }
+            ctx.clearRect(0, 0, width, height);
+            ctx.drawImage(img, index * perWidth, (direction == 'left') ? perHeight : perHeight * 2, perWidth, perHeight, startX + step * stepSize, startY, perWidth, perHeight);
+        }, 200);
+    };
+    img.src = 'images/04.png';
+</script>
+</body>
+</html>

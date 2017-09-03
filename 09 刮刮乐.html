@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas</title>
+    <style>
+        body{
+            margin: 0;
+            padding:0;
+        }
+        canvas{
+            border: 1px solid #ccc;
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas width="600" height="400"></canvas>
+<script>
+    var canvas = document.querySelector('canvas');
+    var ctx = canvas.getContext('2d');
+
+    var img = new Image();
+    img.onload = function () {
+        /*填充方案*/
+        var pat = ctx.createPattern(img,'no-repeat');
+        /*图片描边*/
+        ctx.strokeStyle = pat;
+        /*设置线的样式*/
+        ctx.lineWidth = 25;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        var isDown = false;
+
+        ctx.canvas.addEventListener('mousedown',function (e) {
+            /*设置起始坐标*/
+            ctx.moveTo(e.clientX,e.clientY);
+            isDown = true;
+        })
+        ctx.canvas.addEventListener('mousemove',function (e) {
+            if(isDown){
+                ctx.lineTo(e.clientX,e.clientY);
+                ctx.stroke();
+            }
+        })
+        ctx.canvas.addEventListener('mouseup',function () {
+            isDown = false;
+        })
+    }
+    img.src = 'images/05.jpg';
+
+</script>
+</body>
+</html>

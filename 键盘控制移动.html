@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas width="600" height="400"></canvas>
+<script>
+    (function (window) {
+        var self;
+
+        function PerMove() {
+            self = this;
+            self.ctx = document.querySelector('canvas').getContext('2d');
+            this.width = self.ctx.canvas.width;
+            this.height = self.ctx.canvas.height;
+            this.index = 0;
+            this.stepSize = 10;
+            this.loadImage();
+
+        }
+
+        (function () {
+            //图片加载
+            this.loadImage = function () {
+                self.img = new Image();
+                self.img.addEventListener('load', function () {
+                    self.perWidth = self.img.width / 4;
+                    self.perHeight = self.img.height / 4;
+                    self.startX = self.width / 2 - self.perWidth / 2;
+                    self.startY = self.height / 2 - self.perHeight / 2;
+                    self.drawPer(0, 0, 0);
+                    self.bindEvent();
+                });
+                self.img.src = 'images/04.png';
+            };
+            //获取按键
+            this.bindEvent = function () {
+                var stepX = 0;
+                var stepY = 0;
+                var direction = 0;
+                document.addEventListener('keydown', function (e) {
+                    switch (e.keyCode) {
+                        case 37:
+                            direction = 1;
+                            stepX--;
+                            break;
+                        case 38:
+                            direction = 3;
+                            stepY--;
+                            break;
+                        case 39:
+                            direction = 2;
+                            stepX++;
+                            break;
+                        case 40:
+                            direction = 0;
+                            stepY++;
+                            break;
+                    }
+                    self.index++;
+                    self.drawPer(stepX, stepY, direction);
+                })
+            };
+            //绘图
+            this.drawPer = function (stepX, stepY, direction) {
+                self.ctx.clearRect(0, 0, self.width, self.height);
+                if (this.index > 3) {
+                    this.index = 0;
+                }
+                self.ctx.drawImage(self.img, self.perWidth * this.index, direction * self.perHeight, self.perWidth, self.perHeight, self.startX + stepX * self.stepSize, self.startY + self.stepSize * stepY, self.perWidth, self.perHeight);
+            }
+
+        }).call(PerMove.prototype);
+
+        window.PerMove = PerMove;
+    })(window);
+    new PerMove();
+</script>
+</body>
+</html>
